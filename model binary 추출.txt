@@ -1,0 +1,1 @@
+python get_model_binary.py --hparams D:/project/streamlit_local/KoBART-summarization/logs/tb_logs/default/version_1/hparams.yaml --model_binary D:/project/streamlit_local/KoBART-summarization/logs/model_chp/epoch=01-val_loss=2.755.ckpt
