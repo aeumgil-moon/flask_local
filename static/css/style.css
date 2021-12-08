@@ -108,6 +108,9 @@ body{
     padding: 10px;
     font-family: 'Nanum Gothic' !important;
 }
+#easy_ta{
+    background-color: rgba(239, 239, 239, 0.3)
+}
 textarea:focus { 
     outline: solid 1px #8dc63f;
     box-shadow: 0 0 2px #8dc63f !important;
@@ -128,4 +131,9 @@ textarea:focus {
 .predict_button:hover {
 	color: rgba(255, 255, 255, 0.85);
 	box-shadow: rgba(30, 22, 54, 0.7) 0 80px 0px 2px inset;
+}
+
+/* ############## span ############## */
+.wd_dict{
+    color: red;
 }
