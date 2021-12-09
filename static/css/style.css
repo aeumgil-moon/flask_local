@@ -43,19 +43,17 @@ div, p, textarea {
 /* ############## div ############## */
 .container{
     min-width: 20%;
-    max-width: 100%;
-    width: 100%;
+    max-width: 85%;
+    margin: auto;
+    padding-top: 40px;
 }
 .mode{
     text-align: right;
+    float: right;
 }
-.title{
-    display: flex;
-    justify-content: left;
-    align-items: center;
-    margin-top: 20px;
-    margin-left: 130px;
-}
+/* .title{
+    
+} */
 .title_exp{
     display: flex;
     justify-content: center;
@@ -65,7 +63,6 @@ div, p, textarea {
 }
 .contents{
     display: flex;
-    width: 90%;
     margin: auto;
 }
 .write_diff{
@@ -110,6 +107,7 @@ div, p, textarea {
 /* ############## img ############## */
 .title_img{
     margin-right: 25px;
+    vertical-align: middle;
 }
 .loading_img{
     width: 80px;
@@ -123,7 +121,7 @@ div, p, textarea {
     font-weight: 600;
     font-family: 'NMCF_fontM_otf';
     color: forestgreen;
-    margin: 0px;
+    vertical-align: middle;
 }
 .title_explain{
     font-size: 16px;
@@ -145,7 +143,7 @@ textarea{
 .write_ta{
     resize: none;
     width: 1000px;
-    height: 500px;
+    height: 400px;
     min-width: 20%;
     max-width: calc(100% - 20px);
     min-height: 10%;
@@ -172,6 +170,7 @@ textarea:focus {
     background-color: rgba(0,0,0,0);
     color: skyblue;
     padding: 5px;
+    cursor: pointer;
 }
 .btn-toggle:hover{
     color: white;
