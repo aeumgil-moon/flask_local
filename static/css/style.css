@@ -1,6 +1,43 @@
 /* ############## body ############## */
-body{
-    font-family: 'Nanum Gothic' !important;
+body {
+    font-family: 'NMCF_fontL_otf', 'Nanum Gothic';
+    --text-color: #222;
+    --bkg-color: #fff;
+    --easy-color: rgba(239, 239, 239, 0.3);
+    --title-color: rgba(246, 246, 246, 0.7);
+}
+body.dark-theme {
+    font-family: 'NMCF_fontL_otf', 'Nanum Gothic';
+    --text-color: #fff;
+    --bkg-color: #222;
+    --easy-color: rgba(110, 110, 110, 1);
+    --title-color: rgba(246, 246, 246, 0.3);
+}
+
+@media (prefers-color-scheme: dark) {
+    /* defaults to dark theme */
+    body {
+      font-family: 'NMCF_fontL_otf', 'Nanum Gothic';
+      --text-color: #fff;
+      --bkg-color: #222;
+      --easy-color: rgba(239, 239, 239, 0.3);
+      --title-color: rgba(246, 246, 246, 0.7);
+    }
+    body.light-theme {
+      font-family: 'NMCF_fontL_otf', 'Nanum Gothic';
+      --text-color: #222;
+      --bkg-color: #fff;
+      --easy-color: rgba(110, 110, 110, 1);
+      --title-color: rgba(246, 246, 246, 0.3);
+    }
+}
+
+body {
+    background: var(--bkg-color);
+}
+
+div, p, textarea {
+    color: var(--text-color);
 }
 
 /* ############## div ############## */
@@ -9,18 +46,22 @@ body{
     max-width: 100%;
     width: 100%;
 }
+.mode{
+    text-align: right;
+}
 .title{
     display: flex;
-    justify-content: center;
+    justify-content: left;
     align-items: center;
-    margin-top: 40px;
+    margin-top: 20px;
+    margin-left: 130px;
 }
 .title_exp{
     display: flex;
     justify-content: center;
     align-items: center;
     margin-top: 10px;
-    margin-bottom: 30px;
+    margin-bottom: 60px;
 }
 .contents{
     display: flex;
@@ -80,20 +121,27 @@ body{
     display: inline-block;
     font-size: 25px;
     font-weight: 600;
+    font-family: 'NMCF_fontM_otf';
     color: forestgreen;
     margin: 0px;
 }
 .title_explain{
     font-size: 16px;
+    line-height: 30px;
+    background: var(--title-color);
+    font-family: 'NMCF_fontM_otf';
+    padding: 10px 20px;
 }
 .write_header{
     font-size: 20px;
     font-weight: 600;
-    color: black;
     margin-bottom: 20px;
 }
 
 /* ############## textarea ############## */
+textarea{
+    font-family: 'NMCF_fontM_otf';
+}
 .write_ta{
     resize: none;
     width: 1000px;
@@ -106,19 +154,29 @@ body{
     line-height: 1.5rem;
     border: 2px solid #eee;
     padding: 10px;
-    font-family: 'Nanum Gothic' !important;
 }
 #easy_ta{
-    background-color: rgba(239, 239, 239, 0.3)
+    background-color: var(--easy-color);
 }
 textarea:focus { 
     outline: solid 1px #8dc63f;
-    box-shadow: 0 0 2px #8dc63f !important;
+    box-shadow: 0 0 2px #8dc63f;
     border-color: #719ECE;
     box-shadow: 0 0 2px #719ECE;
 }
 
 /* ############## button ############## */
+.btn-toggle{
+    border-radius: 5px;
+    border: 1px solid skyblue;
+    background-color: rgba(0,0,0,0);
+    color: skyblue;
+    padding: 5px;
+}
+.btn-toggle:hover{
+    color: white;
+    background-color: skyblue;
+}
 .predict_button {
     padding: 20px;
     font-weight: bold;

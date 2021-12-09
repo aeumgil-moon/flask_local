@@ -5,12 +5,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<!-- css -->
-<link href="static/css/style.css" rel="stylesheet">
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-latest.min.js"></script>
 
-<title>애움길_local</title>
+<!-- css -->
+<link href="static/css/fonts.css" rel="stylesheet" type="text/css">
+<link href="static/css/style.css" rel="stylesheet" type="text/css">
+
+<title>애움길_로컬서버</title>
 <link rel="icon" type="image/x-icon" href="static/images/aeumgil_logo.ico">
 
 <script>
@@ -65,7 +67,7 @@
                         error: function(request, status, error){
                             // alert(request, status, error);
                             // alert("code: " + request.status + "\n" + "message: " + request.responseText + "\n" + "error: " + error);
-                            alert('쉬운 말로 바꾸는데 실패하였습니다.\n입력한 말이 3000자가 넘는지 확인해주세요.');
+                            alert('쉬운 말로 바꾸는데 실패하였습니다.\n관리자에게 문의해주세요.');
 
                             closeLoading();
                         }
@@ -124,18 +126,26 @@
 </head>
 <body>
     <div class="container">
+        <div class="mode">
+            <button class="btn-toggle" id="btn">모드변경</button>
+        </div>
+
         <div class="title">
             <img src={{ url_for('static', filename='images/aeumgil_logo.png') }} class="title_img">
-            <p class="title_header">쉬운 말로 바꿔주는 AI</p>
+            <p class="title_header">신문 기사를 쉬운 말로 요약해주는 AI 서비스</p>
         </div>
 
         <div class="title_exp">
-            <p class="title_explain" style="display: none;">어려운 말을 쉬운 말로 바꿔드립니다. ^0^</p>
+            <p class="title_explain">
+                ✧*｡٩(ˊᗜˋ*)و✧*｡ 에움길은 ‘빙 둘러서 가는 멀고 굽은 길’로 지름길의 반대말입니다.<br>
+                저희는 느리지만 함께가는 에움길로 가겠다는 의미와 사랑으로 배우는 애움길을 지향합니다.<br>
+                교육 현장에서 소외받는 느린학습자를 위한 쉬운글 생성요약 AI 서비스를 개발했습니다.<br>
+            </p>
         </div>
 
         <div class="contents">
             <div class="write_diff">
-                <p class="write_header">어려운 말</p>
+                <p class="write_header">신문 기사를 입력해주세요.</p>
                 <textarea class="write_ta" id="diff_ta" maxlength="3000" placeholder="여기에 어려운 말을 입력해주세요."></textarea>
 
                 <div class="div_button">
@@ -144,7 +154,7 @@
             </div>
         
             <div class="write_easy">
-                <p class="write_header">쉬운 말</p>
+                <p class="write_header">쉬운 말로 요약해줍니다.</p>
                 <div class="write_ta" id="easy_ta"></div>
             </div>
 
@@ -156,5 +166,35 @@
     </div>
 
     <div id="loading"></div>
+
+<script>
+    // 다크모드 - 라이트모드
+    const btn = document.querySelector(".btn-toggle");
+    const btnElement = document.getElementById('btn');
+    const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
+
+    const currentTheme = localStorage.getItem("theme");
+    if (currentTheme == "dark") {
+        document.body.classList.add("dark-theme");
+    } else if (currentTheme == "light") {
+        document.body.classList.add("light-theme");
+    }
+
+    btn.addEventListener("click", function () {
+    if (prefersDarkScheme.matches) {
+        document.body.classList.toggle("light-theme");
+        var theme = document.body.classList.contains("light-theme")
+        ? "light"
+        : "dark";
+    } else {
+        document.body.classList.toggle("dark-theme");
+        var theme = document.body.classList.contains("dark-theme")
+        ? "dark"
+        : "light";
+    }
+    localStorage.setItem("theme", theme);
+    });
+</script>
+
 </body>
 </html>
