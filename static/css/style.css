@@ -153,6 +153,9 @@ textarea{
     border: 2px solid #eee;
     padding: 10px;
 }
+#diff_ta{
+    color: black !important;
+}
 #easy_ta{
     background-color: var(--easy-color);
 }
