@@ -7,6 +7,7 @@ import pandas as pd
 mecab = Mecab()
 
 app = Flask(__name__) # 현재 파이썬 파일에서 실행할 경우 써줌
+app.config['JSON_AS_ASCII'] = False # json에서 ascii 인코딩 사용하지 않고 utf8 인코딩 사용
 
 # 모델 로드
 def load_model():
@@ -56,11 +57,11 @@ def predict():
     if text:
         text = text_pre(text)
         
-        if len(text) < 3000:
-            input_ids = tokenizer.encode(text)
-            input_ids = torch.tensor(input_ids)
-            input_ids = input_ids.unsqueeze(0)
+        input_ids = tokenizer.encode(text)
+        input_ids = torch.tensor(input_ids)
+        input_ids = input_ids.unsqueeze(0)
 
+        if input_ids.shape[1] < 512:
             output = model.generate(input_ids, eos_token_id=1, max_length=512, num_beams=5)
             output = tokenizer.decode(output[0], skip_special_tokens=True)
 
@@ -73,10 +74,10 @@ def predict():
                 key_val = value.split(':')
                 wd_key.append(key_val[0])
 
-            return jsonify(result='success', result2=output, result3=wd_list, result4=wd_key)
+            return jsonify(result='SUCCESS', result2=output, result3=wd_list, result4=wd_key), 200
 
         else:
-            return jsonify(result='fail', result2='ERROR')
+            return jsonify(result='ERROR_02'), 200
         
     else:
         return jsonify(result='fail', result2='ERROR')

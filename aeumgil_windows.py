@@ -7,6 +7,7 @@ import pandas as pd
 #mecab = Mecab()
 
 app = Flask(__name__) # 현재 파이썬 파일에서 실행할 경우 써줌
+app.config['JSON_AS_ASCII'] = False # json에서 ascii 인코딩 사용하지 않고 utf8 인코딩 사용
 
 # 모델 로드
 def load_model():
@@ -59,40 +60,35 @@ def predict():
         input_ids = torch.tensor(input_ids)
         input_ids = input_ids.unsqueeze(0)
 
-        ## 모델 search 방법에 대해 정의(hyperparameter)
-        output = model.generate(
-            input_ids,
-            max_length=100,
-            num_beams=5, # beam search 사용(1보다 큰 값 사용)
-            early_stopping=True, #EOS토큰이 나오면 생성을 중단
-            no_repeat_ngram_size=3, # n-gram에서 n만큼의 어구가 반복되지 않도록 설정함 // 이렇게 설정하면 해당 단어는 n-gram에서 설정한 n보다 작은 값의 빈도 수 만큼 출력된다.
-            num_return_sequences=3 # n개의 문장을 리턴 // no_repeat_ngram_size의 단점을 보완하기 위해 설정(num_beams보다 작거나 같아야한다.)
-        )
+        if input_ids.shape[1] < 512:
+            output = model.generate(input_ids, eos_token_id=1, max_length=512, num_beams=5)
+            output = tokenizer.decode(output[0], skip_special_tokens=True)
 
-        output = tokenizer.decode(output[0], skip_special_tokens=True)
+            output = "부산시는 보호종료 아동을 돕기 위해 '자립수당'과 '주거지원 통합서비스'를 " \
+                        "실시할 예정인 가운데 '자립수당'은 만18세 이후 만기보호 종료 또는 연장보호 종료된 아동을 " \
+                        "대상으로 1인당 매달 30만원을 주고 '주거지원 통합서비스'는 " \
+                        "청년 매입임대주택 30호를 지원해요."
+            wd_list = ['종료: 끝, 완료, 종결, 끝내다',
+                        '자립: 독립',
+                        '주거: 거주, 주택',
+                        '매입: 구매, 구입, 매수, 사다, 사들이다']
 
-        output = "부산시는 보호종료 아동을 돕기 위해 '자립수당'과 '주거지원 통합서비스'를 " \
-                    "실시할 예정인 가운데 '자립수당'은 만18세 이후 만기보호 종료 또는 연장보호 종료된 아동을 " \
-                    "대상으로 1인당 매달 30만원을 주고 '주거지원 통합서비스'는 " \
-                    "청년 매입임대주택 30호를 지원해요."
-        wd_list = ['종료: 끝, 완료, 종결, 끝내다',
-                    '자립: 독립',
-                    '주거: 거주, 주택',
-                    '매입: 구매, 구입, 매수, 사다, 사들이다']
+            # vocabs_data = pd.read_csv('./data/vocabs.csv')
+            # wd_list = easy_word(output,vocabs_data)
+            # print(wd_list)
+            
+            wd_key = []
+            for value in wd_list:
+                key_val = value.split(':')
+                wd_key.append(key_val[0])
 
-        # vocabs_data = pd.read_csv('./data/vocabs.csv')
-        # wd_list = easy_word(output,vocabs_data)
-        # print(wd_list)
-        
-        wd_key = []
-        for value in wd_list:
-            key_val = value.split(':')
-            wd_key.append(key_val[0])
+            return jsonify(result='SUCCESS', result2=output, result3=wd_list, result4=wd_key), 200
 
-        return jsonify(result='success', result2=output, result3=wd_list, result4=wd_key)
-        
+        else:
+            return jsonify(result='ERROR_02'), 200
+            
     else:
-        return jsonify(result='fail', result2='ERROR')
+        return jsonify(result='ERROR_01'), 401
 
 # 404 에러
 # @app.errorhandler(404)

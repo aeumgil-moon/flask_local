@@ -21,15 +21,11 @@
         $('#predict_button').click(function(){
             Loading();
             var diff_text = $('#diff_ta').val();
-            // console.log(diff_text.length);
             
             if(diff_text == '' || diff_text == 'undefined'){
                 alert('입력한 말이 없습니다.');
                 closeLoading();
             } else{
-                if(diff_text.length > 3000){
-                    alert('입력한 말이 3000자를 넘습니다.\n입력한 말을 다시 확인해주세요.');
-                } else{
                     var data = {
                         'text' : diff_text
                     }
@@ -42,25 +38,40 @@
                         dataType: 'JSON', // JSON 타입으로 값을 보낸다.
                         contentType: 'application/json',
                         success: function(result){
-                            predict = result.result2; // 모델 예측 output
-                            wd_list = result.result3; // 단어 사전 리스트형
-                            wd_key = result.result4;  // 단어 사전에서 key값만 추출
+                            var result_str = result.result;
+                            if(result_str == 'SUCCESS'){
+                                predict = result.result2; // 모델 예측 output
+                                wd_list = result.result3; // 단어 사전 리스트형
+                                wd_key = result.result4;  // 단어 사전에서 key값만 추출
 
-                            var replace_predict = predict;
-                            for(var i=0; i<wd_key.length; i++){
-                                // 쉬운 글
-                                replace_predict = replace_predict.replace(wd_key[i],
-                                                  '<span class="wd_dict">' + wd_key[i] + '</span>');
+                                var replace_predict = predict;
+                                for(var i=0; i<wd_key.length; i++){
+                                    // 쉬운 글
+                                    replace_predict = replace_predict.replace(wd_key[i],
+                                                    '<span class="wd_dict">' + wd_key[i] + '</span>');
+                                }
+
+                                var wd_str = '';
+                                wd_list.forEach(element => {
+                                    // 단어사전
+                                    wd_str += 'ㆍ' + element + '\n'; // 줄 바꿈 적용
+                                });
+
+                                $('#easy_ta').html(replace_predict);
+                                $('#dict_ta').text(wd_str);
+
+                            } else if(result_str == 'ERROR_02'){
+                                alert('모델에 적용할 수 있는 글자 수를 넘었습니다.\n다시 한 번 확인해주세요.');
+                                $('#diff_ta').text('');
+                                $('#easy_ta').text('');
+                                $('#dict_ta').text('');
+
+                            } else{
+                                alert('쉬운 말로 바꾸는데 실패하였습니다.\n관리자에게 문의해주세요.');
+                                // $('#diff_ta').text('');
+                                // $('#easy_ta').text(''); 
+                                // $('#dict_ta').text('');
                             }
-
-                            var wd_str = '';
-                            wd_list.forEach(element => {
-                                // 단어사전
-                                wd_str += 'ㆍ' + element + '\n'; // 줄 바꿈 적용
-                            });
-
-                            $('#easy_ta').html(replace_predict);
-                            $('#dict_ta').text(wd_str);
 
                             closeLoading();
                         },
@@ -72,8 +83,6 @@
                             closeLoading();
                         }
                     })
-                }
-                
             }
         })
     });
