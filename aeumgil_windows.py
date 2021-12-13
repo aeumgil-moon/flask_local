@@ -11,7 +11,9 @@ app.config['JSON_AS_ASCII'] = False # json에서 ascii 인코딩 사용하지 �
 
 # 모델 로드
 def load_model():
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model = BartForConditionalGeneration.from_pretrained("./kobart_summary")
+    model.to(device)
     return model
 
 model = load_model()
