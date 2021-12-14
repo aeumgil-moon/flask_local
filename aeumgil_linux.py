@@ -4,6 +4,7 @@ from kobart_transformers import get_kobart_tokenizer
 from transformers.models.bart import BartForConditionalGeneration
 from konlpy.tag import Mecab
 import pandas as pd
+import re
 mecab = Mecab()
 
 app = Flask(__name__) # 현재 파이썬 파일에서 실행할 경우 써줌
@@ -22,6 +23,32 @@ tokenizer = get_kobart_tokenizer()
 ## 데이터 전처리 ##
 def text_pre(text):
     text = text.replace('\n', '')
+    #- html 처리
+    text = text.replace(u'\xa0', u'')  
+    
+    #- 이메일 처리 (이메일 형식과 일치하면 공백으로 대체)
+    pattern = '([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)'
+    text = re.sub(pattern=pattern, repl="", string=text)
+    
+    #- url 처리
+    url = re.compile(r'https?://\S+|www\.\S+')
+    url.sub(r'',text)
+    
+    #- 여러개의 공백은 하나의 공백으로
+    text = re.sub(' +', ' ', text) 
+    
+    #- [ ~ ] 처리
+    text = re.sub(r'\[.+\]', " ", text)
+    
+    #- 불필요한 기호 공백으로 대체
+    #- text = re.sub('[^가-힣a-zA-Z0-9,.?!-~%]+'," ", text)
+    text = re.sub(r'[“”]+','"',text)
+    text = re.sub(r'[^ㄱ-ㅎ가-힣a-zA-Z0-9.,·\-\'\"!?~%()]+'," ", text)
+    
+    #- 여러개의 공백은 하나의 공백으로
+    text = re.sub(' +', ' ', text) 
+    
+    #- 양쪽 공백 제거
     text = text.strip()
 
     return text
